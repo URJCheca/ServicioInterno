@@ -12,7 +12,9 @@ public class ServiciorestApplication {
 	    String asunto = "Correo de prueba enviado desde Java";
 	    String cuerpo = "Esta es una prueba de correo...";
 
-	    EmailSenderService.enviarConGMail(destinatario, asunto, cuerpo);
+	    //EmailSenderService.enviarConGMail(destinatario, asunto, cuerpo);
+	    System.out.println("Entro");
+	    FacturaSocket.facturaSocket();
 	}
 
 }
