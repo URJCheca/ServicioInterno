@@ -25,7 +25,9 @@ public class FacturaSocket {
 	try {
 		ServerSocketFactory serverSocketFactory= SSLServerSocketFactory.getDefault();
 		SSLServerSocket serverSocket =(SSLServerSocket)serverSocketFactory.createServerSocket(port) ;
+		System.out.println("Aceptando conexion");
 		Socket socket = serverSocket.accept();
+		System.out.println("Aceptada conexion");
 		InputStream is = socket.getInputStream();
 		ObjectInputStream ois= new ObjectInputStream (is);
 		while(true) {
