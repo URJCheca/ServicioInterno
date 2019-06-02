@@ -9,6 +9,11 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.net.ServerSocketFactory;
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+
 
 
 public class FacturaSocket {
@@ -16,19 +21,14 @@ public class FacturaSocket {
 	
 	public static void facturaSocket () {
 		int port= 9999;
-		System.out.println("Esperando1");
+
 	try {
-		System.out.println("Esperando2");
-		ServerSocket serverSocket = new ServerSocket(port) ;
-		System.out.println("Esperando3");
+		ServerSocketFactory serverSocketFactory= SSLServerSocketFactory.getDefault();
+		SSLServerSocket serverSocket =(SSLServerSocket)serverSocketFactory.createServerSocket(port) ;
 		Socket socket = serverSocket.accept();
-		System.out.println("Esperando4");
 		InputStream is = socket.getInputStream();
-		System.out.println("Esperando5");
 		ObjectInputStream ois= new ObjectInputStream (is);
-		System.out.println("Fuera");
 		while(true) {
-		System.out.println("Dentro");
 		Producto producto = (Producto) ois.readObject();
 		System.out.println("Ha llegado el producto "+producto.getName());
 		}
