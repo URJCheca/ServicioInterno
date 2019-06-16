@@ -23,21 +23,16 @@ public class FacturaSocket {
 		int port= 9999;
 
 	try {
-		ServerSocketFactory serverSocketFactory= SSLServerSocketFactory.getDefault();
-		SSLServerSocket serverSocket =(SSLServerSocket)serverSocketFactory.createServerSocket(port) ;
+		ServerSocket serverSocket= new ServerSocket(port);
+		while(true) {
 		System.out.println("Aceptando conexion");
 		Socket socket = serverSocket.accept();
 		System.out.println("Aceptada conexion");
-		InputStream is = socket.getInputStream();
-		ObjectInputStream ois= new ObjectInputStream (is);
-		while(true) {
-		Producto producto = (Producto) ois.readObject();
-		System.out.println("Ha llegado el producto "+producto.getName());
+		Thread t = new Thread(new ProcesadorSocket(socket));
+		t.start();
 		}
-		
-		
 	}
-	catch(IOException | ClassNotFoundException e){
+	catch(IOException e){
 		e.printStackTrace();
 		
 	}
