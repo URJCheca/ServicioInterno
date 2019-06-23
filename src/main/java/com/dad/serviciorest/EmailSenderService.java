@@ -31,7 +31,7 @@ public class EmailSenderService {
 
 	    Session session = Session.getDefaultInstance(props);
 	    MimeMessage message = new MimeMessage(session);
-
+	    System.out.println("Gestionando Envio");
 	    try {
 	        message.setFrom(new InternetAddress(remitente));
 	        message.addRecipients(Message.RecipientType.TO, destinatario);   //Se podrían añadir varios de la misma manera

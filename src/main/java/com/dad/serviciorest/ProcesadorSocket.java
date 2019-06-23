@@ -3,14 +3,11 @@ package com.dad.serviciorest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.dad.amigoanimal.Carrito;
-import com.dad.amigoanimal.Cliente;
 import com.dad.amigoanimal.Producto;;
 public class ProcesadorSocket implements Runnable {
 	
@@ -24,33 +21,33 @@ public class ProcesadorSocket implements Runnable {
 	}
 	
 	public void run() {
-		OutputStream os;
+		int precioTotal=0;
 		try {
 			InputStream is =  socket.getInputStream();
 			ObjectInputStream ois= new ObjectInputStream (is);
-			Carrito carrito = (Carrito) ois.readObject();
-			Cliente cliente = (Cliente) ois.readObject();
-			Set<Entry<Producto, Integer>> contenido = carrito.getCosas();
+			
+			String emailCliente = (String) ois.readObject();
+//			
+			HashMap<Producto, Integer> carrito = (HashMap<Producto, Integer>) ois.readObject();
+			
+			System.out.println("Procesando");
+			Set<Entry<Producto, Integer>> contenido = carrito.entrySet();
+		
 			for (Entry<Producto, Integer> entrada :contenido) {
 				Producto producto = entrada.getKey();
 				cuerpo=cuerpo+"-"+producto.getName()+": "+producto.getDescription()+"\nCantidad:"+ entrada.getValue()+" Precio: "+ producto.getPrice()+"\n";
+				precioTotal= precioTotal+(producto.getPrice()*entrada.getValue().intValue());
 			}
-			cuerpo = cuerpo + "Precio Total: "+carrito.getPrecioTotal()+"\nMuchas gracias por confiar en nosotros";
-			destinatario= cliente.getEmail();
-
+			
+			cuerpo = cuerpo + "Precio Total: "+precioTotal+"\nMuchas gracias por confiar en nosotros";
+			
+			destinatario= emailCliente;
+			System.out.println("Enviando");
 		    EmailSenderService.enviarConGMail(destinatario, asunto, cuerpo);
-		    os = socket.getOutputStream();
-			ObjectOutputStream oos= new ObjectOutputStream (os);
-			oos.writeObject("OK");
+		    System.out.println("Enviado");
 		}catch (IOException | ClassNotFoundException e)  {
-			System.out.println("Fallo en la comunicacion");
-			try {
-				os = socket.getOutputStream();
-				ObjectOutputStream oos= new ObjectOutputStream (os);
-				oos.writeObject("FAIL");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			System.out.println(e.getLocalizedMessage());
+			
 			
 			
 		}

@@ -30,6 +30,7 @@ public class FacturaSocket {
 		System.out.println("Aceptada conexion");
 		Thread t = new Thread(new ProcesadorSocket(socket));
 		t.start();
+		System.out.println("ejecutando hilo");
 		}
 	}
 	catch(IOException e){
